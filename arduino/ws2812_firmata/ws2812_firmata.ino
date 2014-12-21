@@ -55,8 +55,11 @@ void firmataStringCallback(char *string) {
     // Firmata bug: SysEx STRING_DATA handler uses malloc(), but not free()
     // https://github.com/firmata/arduino/issues/74
 
-    free(string);
-    string = 0;
+    // This is fixed in v2.4 and higher.
+    if (FIRMATA_MAJOR_VERSION < 2 || (FIRMATA_MAJOR_VERSION == 2 && FIRMATA_MINOR_VERSION < 4)) {
+      free(string);
+      string = 0;
+    }
 }
 
 void firmataSysexCallback(byte  command, byte  argc, byte *argv) {
